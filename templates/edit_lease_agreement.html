@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Lease Agreement - RentHive</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #f4f4f9 0%, #e8e8ef 100%);
+            color: #333;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.8em;
+            color: #264653;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #264653;
+            font-size: 0.95em;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #2a9d8f;
+            box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.1);
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+
+        button, .back-link {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+        }
+
+        button {
+            background: #2a9d8f;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            background: #264653;
+            transform: translateY(-1px);
+        }
+
+        .back-link {
+            display: inline-block;
+            background: #264653;
+            color: white;
+        }
+
+        .back-link:hover {
+            background: #2a9d8f;
+            transform: translateY(-1px);
+        }
+
+        button:active, .back-link:active {
+            transform: translateY(1px);
+        }
+
+        .flash {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .flash.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .property-info {
+            background: #f4f4f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Lease Agreement</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if agreement %}
+        <div class="property-info">
+            <strong>Property Address:</strong> {{ agreement.address }}
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="agreement_id" value="{{ agreement.agreement_id }}">
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="start_date">Start Date</label>
+                    <input 
+                        type="date" 
+                        id="start_date" 
+                        name="start_date" 
+                        value="{{ agreement.start_date.strftime('%Y-%m-%d') if agreement.start_date else '' }}" 
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="end_date">End Date</label>
+                    <input 
+                        type="date" 
+                        id="end_date" 
+                        name="end_date" 
+                        value="{{ agreement.end_date.strftime('%Y-%m-%d') if agreement.end_date else '' }}" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="pdf_link">Upload New Lease Agreement PDF (Optional)</label>
+                    <input type="file" name="pdf_link" id="pdf_link" accept=".pdf">
+                </div>
+            </div>
+
+            <button type="submit">Update Agreement</button>
+            <a href="{{ url_for('owner_lease_agreements') }}" class="back-link">Cancel</a>
+        </form>
+        {% else %}
+            <p>No agreement found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

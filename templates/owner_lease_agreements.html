@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease Agreements - RentHive</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f4f9;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: #264653;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            color: white;
+            z-index: 10;
+        }
+
+        .sidebar-brand {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-size: 1.8em;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(42, 157, 143, 0.6);
+        }
+
+        .sidebar-nav a.active {
+            background: #2a9d8f;
+        }
+
+        /* Main Content Wrapper */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .top-bar h2 {
+            color: #264653;
+        }
+
+        .logout-btn {
+            text-decoration: none;
+            color: white;
+            background: #264653;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .logout-btn:hover {
+            background: #2a9d8f;
+            transform: translateY(-2px);
+        }
+
+        /* Lease Agreements Table */
+        .lease-agreements {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .lease-agreements table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .lease-agreements thead {
+            background: #264653;
+            color: white;
+        }
+
+        .lease-agreements th, 
+        .lease-agreements td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background-color: #2a9d8f;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #e76f51;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Create Lease Agreement Form */
+        .create-lease-form {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #264653;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #264653;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #2a9d8f;
+        }
+
+        .flash {
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .flash.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .flash.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .lease-agreements td div {
+            margin-bottom: 5px;  
+            line-height: 1.5;    
+        }
+
+
+        @media (max-width: 768px) {
+            .main-wrapper {
+                margin-left: 0;
+            }
+
+            .lease-agreements {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+          <h2>RentHive</h2>
+        </div>
+        <ul class="sidebar-nav">
+          <li><a href="{{ url_for('owner_dashboard') }}" >Dashboard</a></li>
+          <li><a href="{{ url_for('add_property') }}">Add Property</a></li>
+          <li><a href="{{ url_for('owner_lease_agreements') }}">Lease Agreements</a></li>
+          <li>
+            <a href="#maintenanceSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Maintenance Requests</a>
+            <ul class="collapse list-unstyled" id="maintenanceSubmenu">
+              <li><a href="{{ url_for('owner_view_maintenance_requests') }}">View Requests</a></li>
+              <li><a href="{{ url_for('update_maintenance_status') }}">Update Status</a></li>
+            </ul>
+          </li>
+          <li><a href="{{ url_for('payment_history') }}">Payment History</a></li>
+          <li><a href="{{ url_for('view_notifications') }}">Notification</a></li>
+        </ul>
+      </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <h2>Lease Agreements</h2>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash {{ messages[0][0] }}">
+                    {{ messages[0][1] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+<!-- Lease Agreements Table -->
+<div class="lease-agreements">
+    <table>
+        <thead>
+            <tr>
+                <th>Agreement ID</th>
+                <th>Property</th>
+                <th>Tenants</th> <!-- Updated Header -->
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agreement in agreements %}
+                <tr>
+                    <td>{{ agreement.agreement_id }}</td>
+                    <td>{{ agreement.property_name }}</td>
+                    <td>
+                        {% for tenant in agreement.tenant_names.split(',') %}
+                            {{ tenant }}<br> <!-- Line break for each tenant -->
+                        {% endfor %}
+                    </td> <!-- Display tenants vertically -->
+                    <td>{{ agreement.start_date }}</td>
+                    <td>{{ agreement.end_date }}</td>
+                    <td class="action-buttons">
+                        <a href="{{ url_for('edit_lease_agreement', agreement_id=agreement.agreement_id) }}" class="btn btn-edit">Edit</a>
+                        <form action="{{ url_for('delete_lease_agreement', agreement_id=agreement.agreement_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this lease agreement?');">
+                            <button type="submit" class="btn btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    
+
+
+<!-- Create Lease Agreement Form -->
+<div class="create-lease-form">
+    <h3>Create Lease Agreement</h3>
+    <form action="{{ url_for('create_lease_agreement') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="property">Select Property</label>
+            <select name="property_id" id="property" required>
+                <option value="">Choose a property</option>
+                {% for property in properties %}
+                    <option value="{{ property.property_id }}">{{ property.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <!-- <div class="form-group">
+            <label for="tenant">Select Tenants</label>
+            <select name="tenant_id" id="tenant" required>
+                <option value="">Choose a tenant</option>
+                {% for tenant in tenants %}
+                    <option value="{{ tenant.tenant_id }}">{{ tenant.name }}</option>
+                {% endfor %}
+            </select>
+        </div> -->
+
+        <div class="form-group" id="tenant-emails-container">
+            <label for="tenant_emails">Tenant Emails:</label>
+            <div class="input-group mb-2">
+                <input type="email" name="tenant_emails[]" class="form-control" placeholder="Enter tenant email" required>
+                <button type="button" class="btn btn-outline-secondary add-email-btn">Add</button>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="start_date">Start Date</label>
+            <input type="date" name="start_date" id="start_date" required>
+        </div>
+        <div class="form-group">
+            <label for="end_date">End Date</label>
+            <input type="date" name="end_date" id="end_date" required>
+        </div>
+        <div class="form-group">
+            <label for="pdf_link">Lease Agreement PDF</label>
+            <input type="file" name="pdf_link" id="pdf_link" accept=".pdf">
+        </div>
+        <button type="submit" class="submit-btn">Create Agreement</button>
+    </form>
+</div>
+</main>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const container = document.getElementById("tenant-emails-container");
+
+        container.addEventListener("click", function (event) {
+            if (event.target.classList.contains("add-email-btn")) {
+                // Create a new input group for email
+                const inputGroup = document.createElement("div");
+                inputGroup.classList.add("input-group", "mb-2");
+
+                // Email input
+                const emailInput = document.createElement("input");
+                emailInput.type = "email";
+                emailInput.name = "tenant_emails[]";
+                emailInput.classList.add("form-control");
+                emailInput.placeholder = "Enter tenant email";
+                emailInput.required = true;
+
+                // Remove button
+                const removeBtn = document.createElement("button");
+                removeBtn.type = "button";
+                removeBtn.classList.add("btn", "btn-outline-danger");
+                removeBtn.textContent = "Remove";
+
+                // Append email input and remove button to the group
+                inputGroup.appendChild(emailInput);
+                inputGroup.appendChild(removeBtn);
+
+                // Append the group to the container
+                container.appendChild(inputGroup);
+            } else if (event.target.classList.contains("btn-outline-danger")) {
+                // Remove the input group
+                event.target.parentElement.remove();
+            }
+        });
+    });
+</script>
+
+ <!-- Bootstrap JS and dependencies -->
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
